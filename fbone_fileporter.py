@@ -152,17 +152,100 @@ def convertWaterMesh(data):
 
     return data 
 
-def convertVisualWater(data):
-    pass
+def convertVisualWater(data: bytes):
+    offset = 0
+    dataLength = len(data)
+
+    pointer = bytes(data[11], data[10], data[9], data[8])
+
+    pointerOffset = int.from_bytes(pointer, "little")
+
+    # Reverse header
+    for i in range(3):
+        data = reverseFourByteBlock(data, offset)
+
+        offset += 4
+
+    # Reverse first data chunk
+    while True:
+        if offset == pointerOffset:
+            data = reverseTwoByteBlock(data, offset)
+            data = reverseTwoByteBlock(data, offset + 2)
+
+            offset += 4 
+
+            break
+
+        data = reverseTwoByteBlock(data, offset)
+        
+        offset += 2
+
+    # Reverse second data chunk 
+    while True:
+        if data[offset] == 84 and data[offset + 1] == 101 and data[offset + 2] == 114 and data[offset + 3] == 114 or data[offset] == 83 and data[offset + 1] == 104 and data[offset + 2] == 97 and data[offset + 3] == 100:
+            materialsCount = int.from_bytes(data[offset - 4:offset], "big")
+
+            offset += 4
+
+            break
+
+        data = reverseFourByteBlock(data, offset)
+
+        offset += 4
+
+    # Reverse actual footer
+    while True:
+        if offset >= dataLength:
+            break
+
+        data = reverseFourByteBlock(data, offset)
+
+        offset += 4
+
+    return data
 
 def convertTerrainMaterialMap(data):
-    pass
+    offset = 0
+    dataLength = len(data)
+
+    # Reverse header
+
+    # Reverse first data chunk
+    while True:
+        if offset >= dataLength:
+            break
+
+        data = reverseTwoByteBlock(data, offset)
+
+        offset += 2
+
+    # Reverse second data chunk
+
+    return data
 
 def convertVisualTerrain(data):
     pass
 
 def convertTexture(data):
-    pass
+    offset = 0
+    dataLength = len(data)
+
+    # Reverse header
+    for i in range(23):
+        data = reverseFourByteBlock(data, offset)
+
+        offset += 4
+
+    #Reverse data
+    while True:
+        if offset >= dataLength:
+            break
+
+        data = reverseTwoByteBlock(data, offset)
+
+        offset += 2
+
+    return data
 
 def reverseTwoByteBlock(data, offset):
     temp0 = data[offset]
