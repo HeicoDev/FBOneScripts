@@ -8,7 +8,7 @@ import shutil
 
 ## Frostbite 1 File Porter by Heico (experimental) (WIP)
 ## Ports files from Frostbite 1 games (console) to BFBC2 (PC) 
-## Requires Python 3.6.9! Other versions may not work.
+## Requires Python 3.9.6! Other versions may not work.
 ## Use command line or drag n drop file onto the script to convert
 ## Supported file formats: .terrainheightfield .watermesh .visualwater .ps3texture .xenontexture
 

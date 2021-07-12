@@ -90,7 +90,6 @@ def write128(integer):
         bytestring+=chr(byte)
     return bytestring
 
-
 try:
     #try to print a number as 0.95
     from ctypes import *
@@ -224,8 +223,6 @@ def toxml(filename):
         f.close()
         out.close()
 
-
-
 def todic(word):
     try: return dic[word]
     except:
@@ -323,9 +320,7 @@ def readline(line):
         
     numofnums=write128(len(nums))
     return prefix+"\x71"+attribbytes+numofnums+numlen+"".join(nums)
-        
-        
-    
+           
 def todbx(filename):
     if filename[-4:]!=".xml": return
     fi=open(filename,"rb")
@@ -361,13 +356,10 @@ def todbx(filename):
     payload.close()
     out.close()
 
-
-
 def lp(path): #long pathnames
     if path[:4]=='\\\\?\\': return path
     elif path=="": return path
     else: return unicode('\\\\?\\' + os.path.normpath(path))
-
 
 def main():
     inp=[lp(p) for p in sys.argv[1:]]

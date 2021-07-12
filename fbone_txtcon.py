@@ -7,7 +7,7 @@ import time
 import shutil
 
 ## Frostbite 1 Texture Converter by Heico
-## Requires Python 3.6.9! Other versions may not work.
+## Requires Python 3.9.6! Other versions may not work.
 ## Use command line or drag n drop file onto the script to convert
 ## Supported file formats: .dds .itexture .ps3texture .xenontexture .terrainheightfield
 

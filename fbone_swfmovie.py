@@ -1,10 +1,12 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3.9
 
-###############################
-#   Created by EmilHernvall   #
-###############################
-#       Edited by Heico       #
-###############################
+## Swfmovie/BIG extractor by EmilHernvall
+## Edited for swfmovie files and ported to Python 3 by Heico
+## Requires Python 3.9.6! Other versions may not work.
+## Use command line or drag n drop file onto the script to convert
+## Supported file formats: .swfmovie
+
+## Old description:
 
 # bigdecoder.py, by aderyn@gmail.com, 2009-03-01
 #
@@ -49,22 +51,22 @@ class entry:
 	pass
 
 if len(sys.argv) != 3:
-	print "usage: python bigdecoder.py [file] [target]"
+	print("usage: python3 fbone_swfmovie.py [file] [target]")
 	exit()
 	
-print "BIG-file decoder by aderyn@gmail.com"
+print("BIG-file decoder by aderyn@gmail.com")
 
 filePath = sys.argv[1]
 targetDir = sys.argv[2]
 
 if not os.path.exists(filePath):
-	print "Requested file doesn't exist."
+	print("Requested file doesn't exist.")
 	exit()
 	
 if targetDir[-1] != "\\":
 	targetDir += "\\"
 	
-print "Processing " + filePath
+print("Processing " + filePath)
 
 # open the file in binary read mode.
 # without the b-flag the tell-method
@@ -75,27 +77,25 @@ file = open(filePath, "rb")
 
 # this seems to vary. zero hour uses BIGF
 header = file.read(4)
-if header != "BIGF":
-	print "Invalid file format."
+if header != b"BIGF":
+	print("Invalid file format.")
 	exit()
 
 # this seems to be the only value encoded in
 # little-endian order.
 (size,) = struct.unpack("I", file.read(4))
-print "size: %d" % (size,)
+print("size: %d" % (size,))
 
 (entryCount,indexSize) = struct.unpack(">II", file.read(8))
-print "entry count: %d" % (entryCount,)
-print "index size: %d" % (indexSize,)
-
-print
+print("entry count: %d" % (entryCount,))
+print("index size: %d" % (indexSize,))
 
 # read the index table:
 
 # assume that the file contains the amount of 
 # entries specified by the global header
 entries = []
-for j in xrange(0, entryCount):
+for j in range(0, entryCount):
 
 	(entryPos,entrySize) = struct.unpack(">II", file.read(8))
 	
@@ -108,7 +108,7 @@ for j in xrange(0, entryCount):
 		if ord(n) == 0:
 			break
 		
-		fileName += n
+		fileName += n.decode("ascii")
 	
 	e = entry()
 	e.name = fileName
@@ -120,8 +120,8 @@ for j in xrange(0, entryCount):
 # iterate through the index entries and
 # copy the data into separate files.	
 for i, e in enumerate(entries):
-	print "opening %s (size: %d, position: %d)" % (e.name,e.size,e.position)
-	print "file %d of %d" % (i+1, entryCount)
+	print("opening %s (size: %d, position: %d)" % (e.name,e.size,e.position))
+	print("file %d of %d" % (i+1, entryCount))
 	
 	# calculate the path where the file will be created
 	# in order to ensure that the directories needed actually
@@ -136,21 +136,21 @@ for i, e in enumerate(entries):
 		
 	# skip files that already exist.
 	if os.path.exists(targetPath):
-		print "%s exists. Skipping." % (targetPath,)
+		print("%s exists. Skipping." % (targetPath,))
 		continue
 	
-	print "Opening %s for writing" % (targetPath,)
+	print("Opening %s for writing" % (targetPath,))
 	targetFile = open(targetPath, "wb")
 	
-	print "Seeked to %d" % (e.position,)
+	print("Seeked to %d" % (e.position,))
 	file.seek(e.position)
 	
-	print "Starting data transfer"
-	for i in xrange(0, e.size):
+	print("Starting data transfer")
+	for i in range(0, e.size):
 		byte = file.read(1)
 		targetFile.write(byte)
 		
-	print "Wrote %d bytes" % (e.size,)
+	print("Wrote %d bytes" % (e.size,))
 	
-	print "Done, closing file."
+	print("Done, closing file.")
 	targetFile.close()
