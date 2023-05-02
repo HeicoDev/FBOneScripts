@@ -1,6 +1,6 @@
-######################################################################################################
-#   Created by Frankelstner   ##   Console related fixes by Heico   ##   Special thanks to Powback   #
-######################################################################################################
+############################################################################################
+#   Created by Frankelstner   ##   Small fixes by Heico   ##   Special thanks to Powback   #
+############################################################################################
 
 # General usage of the script: In the file explorer, drag and drop one or several files and/or folders onto the script.
 # It will unpack fbrb archives into FbRB folders; and pack FbRB folders back into fbrb archives.
@@ -84,10 +84,11 @@ import gzip
 from cStringIO import StringIO
 import sys, os
 import tempfile
+import traceback
 
 
 def lp(path): # Fixes issues with long paths.
-    if len(path)<=247 or path[:4]=='\\\\?\\': return path
+    if path[:4]=='\\\\?\\': return path
     return unicode('\\\\?\\' + os.path.normpath(path))
 
 def MakeLongDirs(path):
@@ -115,7 +116,7 @@ def ReadNullTerminatedString(f, offset=None):
         if char=="\0": return rv
         rv+=char
 def PrintPath(path):
-    if path[:4]=='\\\\?\\': print path[:4]
+    if path[:4]=='\\\\?\\': print path[4:]
     else: print path
 
 # FbRB folder extensions vs fbrb archive filetype.
@@ -333,4 +334,4 @@ def main():
 try:
     main()
 except Exception, e:
-    raw_input(e)
+    raw_input(traceback.format_exc())
